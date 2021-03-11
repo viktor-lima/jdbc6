@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import db.DB;
+import db.DbException;
 import db.DbIntegrityException;
 
 public class Program {
@@ -16,6 +17,8 @@ public class Program {
 		try {
 
 			conn = DB.getConnection();
+			
+			conn.setAutoCommit(false);
 
 			st = conn.createStatement();
 
@@ -28,11 +31,19 @@ public class Program {
 
 			int rows2 = st.executeUpdate("update seller set BaseSalary = 3090 where departmentId = 2");
 
+			conn.commit();
+			
 			System.out.println("Rows 1 " + rows1);
 			System.out.println("Rows 2 " + rows2);
 
 		} catch (SQLException e) {
-			throw new DbIntegrityException(e.getMessage());
+			try {
+				conn.rollback();
+				throw new DbException("Transaction rolled back! Coused by: " + e.getMessage() );
+			} catch (SQLException e1) {
+				throw new DbException("Error trying	to rollback! Coused by: " + e1.getMessage());
+			}
+			
 		} finally {
 			DB.closeStatement(st);
 			DB.closeConnection();

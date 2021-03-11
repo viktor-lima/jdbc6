@@ -23,11 +23,12 @@ public class Program {
 			st = conn.createStatement();
 
 			int rows1 = st.executeUpdate("update seller set BaseSalary = 2090 where departmentId = 1");
-
-			int x = 1;
-			if (x < 2) {
-				throw new SQLException("Fake error! ");
-			}
+			/*
+				int x = 1;
+				if (x < 2) {
+					throw new SQLException("Fake error! ");
+				}
+			*/
 
 			int rows2 = st.executeUpdate("update seller set BaseSalary = 3090 where departmentId = 2");
 
